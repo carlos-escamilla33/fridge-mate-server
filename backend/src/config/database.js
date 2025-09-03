@@ -10,6 +10,4 @@ const pool = new Pool({
     database: process.env.DB_NAME,
 });
 
-pool.connect()
-
 export default pool;
