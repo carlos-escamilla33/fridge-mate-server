@@ -1,6 +1,6 @@
 const pool = require("../config/database");
 
-const createAccount = async ({ accountName, accountCode }) => {
+const createAccount = async ({ account_name, account_code }) => {
   try {
     const {rows: [account]} = await pool.query(
       `
@@ -8,7 +8,7 @@ const createAccount = async ({ accountName, accountCode }) => {
         VALUES($1, $2)
         RETURNING *;
         `,
-      [accountName, accountCode]
+      [account_name, account_code]
     );
 
     return account;
@@ -20,15 +20,15 @@ const createAccount = async ({ accountName, accountCode }) => {
   }
 };
 
-const deleteAccount = async (id) => {
+const deleteAccount = async (account_id) => {
   try {
     const {rows: [account]} = await pool.query(
       `
       DELETE FROM account
-      WHERE id=$1
+      WHERE account_id=$1
       RETURNING *;
       `
-    , [id]);
+    , [account_id]);
     return account;
   } catch (err) {
     if (err.code == "42P01") {
@@ -40,4 +40,5 @@ const deleteAccount = async (id) => {
 
 module.exports = {
     createAccount,
+    deleteAccount,
 }
