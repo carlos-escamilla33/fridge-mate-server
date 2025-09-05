@@ -20,6 +20,24 @@ const createAccount = async ({ accountName, accountCode }) => {
   }
 };
 
+const deleteAccount = async (id) => {
+  try {
+    const {rows: [account]} = await pool.query(
+      `
+      DELETE FROM account
+      WHERE id=$1
+      RETURNING *;
+      `
+    , [id]);
+    return account;
+  } catch (err) {
+    if (err.code == "42P01") {
+      throw new Error("Account does not exist");
+    }
+    throw err;
+  }
+}
+
 module.exports = {
     createAccount,
 }
