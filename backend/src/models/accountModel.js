@@ -60,6 +60,18 @@ const updateAccount = async ({account_id, account_name}) => {
   }
 };
 
+const getAccountById = async (id) => {
+  try {
+    const {rows: [account]} = await pool.query(`
+        SELECT * FROM account
+        WHERE account_id=$1;
+      `, [id]);
+    return account;
+  } catch (err) {
+    throw err;
+  }
+}
+
 const deleteAccount = async (account_id) => {
   try {
     const {
@@ -86,5 +98,6 @@ module.exports = {
   deleteAccount,
   getAllAccounts,
   updateAccount,
-  getAccountByCode
+  getAccountByCode,
+  getAccountById
 };
