@@ -30,6 +30,8 @@ const createAccount = async ({account_name, first_name, last_name, email, passwo
 
     await client.query("COMMIT");
 
+    delete account.password;
+
     return {
       account,
       profile,
@@ -45,59 +47,9 @@ const createAccount = async ({account_name, first_name, last_name, email, passwo
   }
 };
 
-const getAllAccounts = async () => {
+const findAccountById = async (id) => {
   try {
-    const { rows } = await pool.query(`
-      SELECT * FROM account
-      `);
-    return rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-const getAccountByCode = async (code) => {
-  try {
-    const {
-      rows: [account],
-    } = await pool.query(
-      `
-        SELECT * FROM account
-        WHERE account_code=$1
-        RETURNING *;
-      `,
-      [code]
-    );
-    return account;
-  } catch (err) {
-    throw err;
-  }
-};
-
-const updateAccount = async ({ account_id, account_name }) => {
-  try {
-    const {
-      rows: [account],
-    } = await pool.query(
-      `
-        UPDATE account
-        SET account_name=$1
-        WHERE account_id=$2
-        RETURNING *;
-      `,
-      [account_name, account_id]
-    );
-    return account;
-  } catch (err) {
-    throw err;
-  }
-};
-
-const getAccountById = async (id) => {
-  try {
-    const {
-      rows: [account],
-    } = await pool.query(
+    const {rows: [account]} = await pool.query(
       `
         SELECT * FROM account
         WHERE account_id=$1;
@@ -110,11 +62,86 @@ const getAccountById = async (id) => {
   }
 };
 
+const findAccountByEmail = async (email) => {
+  try {
+    const {rows: [account]} = await pool.query(
+      `
+      SELECT * FROM account
+      WHERE email=$1
+      `, [email]);
+
+    return account;
+  } catch (err) {
+    throw err;
+  }
+}
+
+const findAccountByCode = async (code) => {
+  try {
+    const {rows: [account]} = await pool.query(
+      `
+        SELECT * FROM account
+        WHERE account_code=$1
+      `,
+      [code]
+    );
+
+    return account;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getAllAccounts = async () => {
+  try {
+    const {rows} = await pool.query(`
+      SELECT * FROM account
+      `);
+    return rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const updateAccountDetails = async ({ account_id, account_name, email }) => {
+  try {
+    const {rows: [account]} = await pool.query(
+      `
+        UPDATE account
+        SET account_name=$1, email=$2
+        WHERE account_id=$3
+        RETURNING *;
+      `,
+      [account_name, email, account_id]
+    );
+
+    return account;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const updateAccountPassword = async (account_id, newPassword) => {
+  try {
+    const updatedHashedPassword = await hashPasswordHelper(newPassword);
+    const {rows: [account]} = await pool.query(
+      `
+        UPDATE account
+        SET password=$1
+        WHERE account_id=$2
+        RETURNING *;
+      `,
+      [updatedHashedPassword, account_id]
+    );
+    return account;
+  } catch (err) {
+    throw err;
+  }
+}
+
 const deleteAccount = async (account_id) => {
   try {
-    const {
-      rows: [account],
-    } = await pool.query(
+    const {rows: [account],} = await pool.query(
       `
       DELETE FROM account
       WHERE account_id=$1
@@ -131,11 +158,36 @@ const deleteAccount = async (account_id) => {
   }
 };
 
+const authenticateLogins = async (email, password) => {
+  try {
+    const account = await findAccountByEmail(email);
+
+    if (!account) {
+      throw new Error("Invalid credentials");
+    }
+
+    const doPasswordsMatch = await bcrypt.compare(password, account.password);
+
+    if (!doPasswordsMatch) {
+      throw new Error("Invalid credentials");
+    }
+
+    delete account.password;
+
+    return account;
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   createAccount,
   deleteAccount,
   getAllAccounts,
-  updateAccount,
-  getAccountByCode,
-  getAccountById,
+  updateAccountDetails,
+  updateAccountPassword,
+  findAccountByCode,
+  findAccountById,
+  findAccountByEmail,
+  authenticateLogins
 };
