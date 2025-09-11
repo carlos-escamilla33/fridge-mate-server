@@ -33,8 +33,24 @@ const findItemById = async (id) => {
     }
 } 
 
+const findItemsByAccountId = async (account_id) => {
+    try {
+        const {rows} = await pool.query(
+            `
+            SELECT * FROM item
+            WHERE account_id=$1
+            `,
+            [account_id]
+        );
+
+        return rows;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createItem,
     findItemById,
-    
+
 }

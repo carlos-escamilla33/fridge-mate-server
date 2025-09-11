@@ -35,7 +35,7 @@ const findProfileById = async (id) => {
 
 const findProfilesByAccountId = async (account_id) => {
     try {
-        const {rows: [profile]} = await pool.query(
+        const {rows} = await pool.query(
             `
             SELECT * FROM profile
             WHERE account_id=$1;
@@ -43,7 +43,7 @@ const findProfilesByAccountId = async (account_id) => {
             [account_id]
         );
 
-        return profile;
+        return rows;
     } catch (err) {
         throw err;
     }
