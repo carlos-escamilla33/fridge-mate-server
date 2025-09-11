@@ -100,10 +100,66 @@ const findExpiredItems = async (account_id) => {
     }
 }
 
+const updateItem = async ({item_id, food_name, expiration_date}) => {
+    try {
+        const {rows:[item]} = await pool.query(
+            `
+            UPDATE item
+            SET food_name=$1, expiration_date=$2, updated_at= NOW()
+            WHERE item_id=$3
+            RETURNING *;
+            `,
+            [food_name, expiration_date, item_id]
+        );
+
+        return item;
+    } catch (err) {
+        throw err;
+    }
+}
+
+const updateItemRipeness = async ({item_id, ripeness}) => {
+    try {
+        const {rows: [item]} = await pool.query(
+            `
+            UPDATE item
+            SET ripeness_level=$1
+            WHERE item_id=$2
+            RETURNING *;
+            `,
+            [ripeness, item_id]
+        );
+
+        return item;
+    } catch (err) {
+        throw err;
+    }
+}
+
+const deleteItem = async (id) => {
+    try {
+        const {rows: [item]} = await pool.query(
+            `
+            DELETE FROM item
+            WHERE item_id=$1
+            RETURNING *;
+            `
+        );
+
+        return item;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createItem,
     findItemById,
     findItemsByAccountId,
     findItemsByProfileId,
     findSoonExpiringItems,
+    findExpiredItems,
+    updateItem,
+    updateItemRipeness,
+    deleteItem
 }
