@@ -85,10 +85,28 @@ const toggleProfileNotifications = async ({profile_id, isNotificationsEnabled}) 
     }
 }
 
+const deleteProfile = async (profile_id) => {
+    try {
+        const {rows: [profile]} = await pool.query(
+            `
+            DELETE FROM profile
+            WHERE profile_id=$1
+            RETURNING *;
+            `,
+            profile_id
+        )
+
+        return profile;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createProfile,
     findProfileById,
     findProfilesByAccountId,
     updateProfile,
-    toggleProfileNotifications
+    toggleProfileNotifications,
+    deleteProfile,
 }
