@@ -17,6 +17,24 @@ const createProfile = async ({account_id, first_name, last_name, notifcations_en
     }
 }
 
+const findProfileById = async (id) => {
+    try {
+        const {rows: [profile]} = await pool.query(
+            `
+            SELECT * FROM profile
+            WHERE profile_id=$1;
+            `,
+            [id]
+        );
+
+        return profile;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createProfile,
+    findProfileById,
+    
 }
