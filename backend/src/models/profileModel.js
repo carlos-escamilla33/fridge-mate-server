@@ -33,8 +33,62 @@ const findProfileById = async (id) => {
     }
 }
 
+const findProfilesByAccountId = async (account_id) => {
+    try {
+        const {rows: [profile]} = await pool.query(
+            `
+            SELECT * FROM profile
+            WHERE account_id=$1;
+            `,
+            [account_id]
+        );
+
+        return profile;
+    } catch (err) {
+        throw err;
+    }
+}
+
+const updateProfile = async ({profile_id, first_name, last_name}) => {
+    try {
+        const {rows: [profile]} = await pool.query(
+            `
+            UPDATE profile
+            SET first_name=$1, last_name=$2
+            WHERE profile_id=$3
+            RETURNING *;
+            `,
+            [first_name, last_name, profile_id]
+        );
+
+        return profile;
+    } catch (err) {
+        throw err;
+    }
+}
+
+const toggleNotifications = async ({profile_id, isNotificationsEnabled}) => {
+    try {
+        const {rows: [profile]} = await pool.query(
+            `
+            UPDATE profile
+            SET notifications_enabled=$1
+            WHERE profile_id=$2
+            RETURNING *;
+            `,
+            [isNotificationsEnabled, account_id]
+        );
+
+        return profile;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createProfile,
     findProfileById,
-    
+    findProfilesByAccountId,
+    updateProfile,
+    toggleNotifications
 }
