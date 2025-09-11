@@ -49,8 +49,44 @@ const findItemsByAccountId = async (account_id) => {
     }
 }
 
+const findItemsByProfileId = async (id) => {
+    try {
+        const {rows} = await pool.query(
+            `
+            SELECT * FROM item
+            WHERE profile_id=$1;
+            `,
+            [id]
+        );
+
+        return rows;
+    } catch (err) {
+        throw err;
+    }
+}
+
+const findSoonExpiringItems = async (account_id) => {
+    try {
+        const {rows} = await pool.query(
+            `
+            SELECT * FROM item
+            WHERE account_id=$1
+            AND expiration_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '3 days'
+            AND expiration_date >= CURRENT_DATE;
+            `,
+            [account_id]
+        );
+
+        return rows;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createItem,
     findItemById,
+    findItemsByAccountId,
+    findItemsByProfileId,
 
 }
