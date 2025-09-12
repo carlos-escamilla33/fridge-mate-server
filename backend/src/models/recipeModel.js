@@ -83,10 +83,28 @@ const updateRecipe = async ({recipe_id, recipe_name, ingredients, instructions, 
     }
 }
 
+const deleteRecipe = async (id) => {
+    try {
+        const {rows: [recipe]} = await pool.query(
+            `
+            DELETE FROM recipe
+            WHERE recipe_id=$1
+            RETURNING *;
+            `,
+            [id]
+        );
+
+        return recipe;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createRecipe,
     findRecipeById,
     findRecipesByAccountId,
     // findAvailableRecipes,
     updateRecipe,
+    deleteRecipe,
 }
