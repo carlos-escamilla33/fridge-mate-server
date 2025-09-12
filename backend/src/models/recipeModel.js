@@ -33,8 +33,60 @@ const findRecipeById = async (id) => {
     }
 }
 
+const findRecipesByAccountId = async (account_id) => {
+    try {
+        const {rows} = await pool.query(
+            `
+            SELECT * FROM recipe
+            WHERE account_id=$1;
+            `,
+            [account_id]
+        );
+
+        return rows;
+    } catch (err) {
+        throw err;
+    }
+}
+
+// const findAvailableRecipes = async (account_id) => {
+//     try {
+//         const {rows} = await pool.query(
+//             `
+//             SELECT * FROM recipe
+//             WHERE account_id=$1;
+//             `,
+//             [account_id]
+//         );
+
+//         return rows;
+//     } catch (err) {
+//         throw err;
+//     }
+// }
+
+const updateRecipe = async ({recipe_id, recipe_name, ingredients, instructions, based_on_items}) => {
+    try {
+        const {rows: [recipe]} = await pool.query(
+            `
+            UPDATE recipe
+            SET recipe_name=$1, ingredients=$2, instructions=$3, based_on_items=$4
+            WHERE recipe_id=$5
+            RETURNING *;
+            `,
+            [recipe_name, ingredients, instructions, based_on_items, recipe_id]
+        );
+        
+        return recipe;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createRecipe,
     findRecipeById,
-    
+    findRecipesByAccountId,
+    // findAvailableRecipes,
+    updateRecipe,
 }
