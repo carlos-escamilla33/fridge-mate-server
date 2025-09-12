@@ -100,6 +100,22 @@ const deleteRecipe = async (id) => {
     }
 }
 
+const searchRecipeByName = async (recipe_name) => {
+    try {
+        const {rows} = await pool.query(
+            `
+            SELECT * FROM recipe
+            WHERE recipe_name=$1;
+            `,
+            [recipe_name]
+        );
+
+        return rows;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createRecipe,
     findRecipeById,
@@ -107,4 +123,5 @@ module.exports = {
     // findAvailableRecipes,
     updateRecipe,
     deleteRecipe,
+    searchRecipeByName,
 }
