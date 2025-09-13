@@ -116,6 +116,23 @@ const searchRecipeByName = async (recipe_name) => {
     }
 }
 
+const searchRecipeByIngredient = async ({account_id, ingredient}) => {
+    try {
+        const {rows: [recipe]} = await pool.query(
+            `
+            SELECT * FROM recipe
+            WHERE account_id=$1
+            AND ingredients ILIKE '%' || $2 || '%';
+            `,
+            [account_id, ingredient]
+        );
+
+        return recipe;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createRecipe,
     findRecipeById,
@@ -124,4 +141,5 @@ module.exports = {
     updateRecipe,
     deleteRecipe,
     searchRecipeByName,
+    searchRecipeByIngredient
 }
