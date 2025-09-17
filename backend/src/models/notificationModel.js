@@ -16,3 +16,24 @@ const createNotification = async ({profile_id, item_id, notification_type, notif
         throw err;
     }
 }
+
+const findByNotificationsByProfileId = async (profile_id) => {
+    try {
+        const {rows} = await pool.query(
+            `
+            SELECT * FROM notification
+            WHERE profile_id=$1;
+            `,
+            [profile_id]
+        );
+
+        return rows;
+    } catch (err) {
+        throw err;
+    }
+}
+
+module.exports = {
+    createNotification,
+    findByNotificationsByProfileId
+}
