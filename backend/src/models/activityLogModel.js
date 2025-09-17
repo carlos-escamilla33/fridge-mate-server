@@ -67,9 +67,28 @@ const findActivityLogsByDateRange = async (account_id, startDate, endDate) => {
     }
 }
 
+const deleteOldActivityLogs = async (account_id) => {
+    try {
+        const {rows} = await pool.query(
+            `
+            DELETE FROM activity_log
+            WHERE account_id=$1
+            AND created_at <= CURRENT_DATE - INTERVAL '7 days'
+            RETURNING *;
+            `,
+            [account_id]
+        );
+
+        return rows;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createActivityLog,
     findActivityLogByAccountId,
     findActivityLogByProfileId,
-    findActivityLogsByDateRange
+    findActivityLogsByDateRange,
+    deleteOldActivityLogs
 }
