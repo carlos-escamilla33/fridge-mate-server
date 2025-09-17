@@ -86,15 +86,15 @@ const markAllNotificationsAsReadByProfileId = async (profile_id) => {
     }
 }
 
-const deleteNotificationById = async (notification_id) => {
+const deleteNotificationByProfileId = async (profile_id) => {
     try {
         const {rows: [notification]} = await pool.query(
             `
             DELETE FROM notification
-            WHERE notification_id=$1
+            WHERE profile_id=$1
             RETURNING *;
             `,
-            [notification_id]
+            [profile_id]
         );
 
         return notification;
@@ -103,11 +103,13 @@ const deleteNotificationById = async (notification_id) => {
     }
 }
 
+
+
 module.exports = {
     createNotification,
     findByNotificationsByProfileId,
     findUnreadNotificationsByProfileId,
     markNotificationAsReadByProfileId,
     markAllNotificationsAsReadByProfileId,
-    deleteNotificationById
+    deleteNotificationByProfileId
 }
