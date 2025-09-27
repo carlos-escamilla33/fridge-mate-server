@@ -39,6 +39,16 @@ const register = async (req, res, next) => {
     }
 }
 
+const login = async (req, res, next) => {
+    const {email, password} = req.body;
+    try {
+        
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
     register,
+    login
 }

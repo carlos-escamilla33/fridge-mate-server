@@ -11,6 +11,7 @@ server.use(express.json());
 server.use(morgan("dev"));
 server.use(express.urlencoded({extended:true}));
 server.use(cors());
+
 server.use("/api", apiRouter);
 
 server.listen(PORT, () => {
