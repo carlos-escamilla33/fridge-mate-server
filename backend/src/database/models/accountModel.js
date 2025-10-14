@@ -103,7 +103,7 @@ const getAllAccounts = async () => {
   }
 };
 
-const updateAccountDetails = async ({ account_id, account_name, email }) => {
+const updateAccountDetails = async ({ account_id, account_name, email}) => {
   try {
     const {rows: [account]} = await pool.query(
       `
@@ -121,6 +121,24 @@ const updateAccountDetails = async ({ account_id, account_name, email }) => {
   }
 };
 
+const updateAccountToken = async ({account_id, resetToken, resetTokenExpiry}) => {
+  try {
+    const {rows: [account]} = await pool.query(
+      `
+      UPDATE account
+      SET reset_token=$1, reset_token_expiry=$2
+      WHERE account_id=$3
+      RETURNING *;
+      `,
+      [resetToken, resetTokenExpiry, account_id]
+    );
+
+    return account;
+  } catch (err) {
+    throw err;
+  }
+}
+
 const updateAccountPassword = async (account_id, newPassword) => {
   try {
     const updatedHashedPassword = await hashPasswordHelper(newPassword);
@@ -133,6 +151,9 @@ const updateAccountPassword = async (account_id, newPassword) => {
       `,
       [updatedHashedPassword, account_id]
     );
+
+    delete account.password;
+    
     return account;
   } catch (err) {
     throw err;

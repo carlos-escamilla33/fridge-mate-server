@@ -62,8 +62,18 @@ const login = async (req, res, next) => {
 }
 
 const forgotPassword = async (req, res, next) => {
+    const {email} = req.body;
     try {
+        const account = await findAccountByEmail(email);
 
+        if (account) {
+            
+
+        }
+
+        res.send({
+            message: "If an account exists with that email, a reset link has been sent."
+        });
     } catch (err) {
         next(err);
     }
