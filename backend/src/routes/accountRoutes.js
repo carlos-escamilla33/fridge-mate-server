@@ -12,7 +12,7 @@ const {
   findAccountById,
   findAccountByEmail,
   authenticateLogins,
-} = require("../models/accountModel");
+} = require("../database/models/accountModel");
 
 accountRouter.use((req, res, next) => {
     console.log("A request has been made to /account");

@@ -1,4 +1,4 @@
-const {createAccount, findAccountByEmail, authenticateLogins} = require("../models/accountModel");
+const {createAccount, findAccountByEmail, authenticateLogins} = require("../database/models/accountModel");
 const jwt = require("jsonwebtoken");
 const {JWT_SECRET} = process.env;
 
@@ -61,7 +61,16 @@ const login = async (req, res, next) => {
     }
 }
 
+const forgotPassword = async (req, res, next) => {
+    try {
+
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
     register,
-    login
+    login,
+    forgotPassword,
 }
