@@ -10,8 +10,8 @@ authRouter.use((req, res, next) => {
 });
 
 authRouter.post("/register", register);
-authRouter.login("/login", login);
-authRouter.forgotPassword("/forgot-password", forgotPassword);
+authRouter.post("/login", login);
+authRouter.post("/forgot-password", forgotPassword);
 
 module.exports = {
     authRouter

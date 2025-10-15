@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const {JWT_SECRET} = process.env;
 
 const register = async (req, res, next) => {
+    console.log(req.body);
     const {account_name, first_name, last_name, email, password} = req.body;
     try {
         const _account = await findAccountByEmail(email);

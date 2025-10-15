@@ -3,9 +3,9 @@ const { hashPasswordHelper, generateCodeHelper } = require("./helpers");
 
 const createAccount = async (account_name, first_name, last_name, email, password) => {
   const client = await pool.connect();
+  const accCode = generateCodeHelper(account_name);
 
   try {
-    const accCode = generateCodeHelper(account_name);
     const hashedPassword = await hashPasswordHelper(password);
 
     await client.query("BEGIN");
