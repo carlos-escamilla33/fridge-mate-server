@@ -1,4 +1,6 @@
 const {createAccount, findAccountByEmail, authenticateLogins, updateAccountToken} = require("../database/models/accountModel");
+const {sendResetEmail} = require("../utils/sendEmail");
+
 const jwt = require("jsonwebtoken");
 const {JWT_SECRET} = process.env;
 
@@ -68,9 +70,12 @@ const forgotPassword = async (req, res, next) => {
 
         if (account) {
             const resetToken = crypto.randomBytes(32).toString("hex");
-            account.resetToken = resetToken;
-            account.resetTokenExpiry = new Date(Date.now() + 3600000);
-            await updateAccountToken(account.account_id, account.resetToken, account.resetTokenExpiry);
+            const resetTokenExpiry = new Date(Date.now() + 3600000);
+
+            await updateAccountToken(account.account_id, resetToken, resetTokenExpiry);
+
+            await sendResetEmail(email, resetToken);
+
         }
 
         res.send({

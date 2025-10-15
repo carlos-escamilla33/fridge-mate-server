@@ -133,6 +133,8 @@ const updateAccountToken = async ({account_id, resetToken, resetTokenExpiry}) =>
       [resetToken, resetTokenExpiry, account_id]
     );
 
+    delete acccount.password;
+
     return account;
   } catch (err) {
     throw err;
