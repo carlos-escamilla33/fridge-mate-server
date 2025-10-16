@@ -108,6 +108,14 @@ const resetPassword = async (req, res, next) => {
     }
 }
 
+const refresh = async (req, res, next) => {
+    try {
+        
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     register,
     login,

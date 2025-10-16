@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "dev": "node --watch ./backend/server.js",
-    "test:models": "jest ./backend/tests/models/*.test.js"
+    "server": "node --watch ./server.js",
+    "test:models": "jest ./tests/models/*.test.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
