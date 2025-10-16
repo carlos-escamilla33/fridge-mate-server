@@ -97,9 +97,9 @@ const findAccountByEmailAndValidToken = async (email, resetToken) => {
     const {rows: [account]} = await pool.query(
       `
       SELECT * FROM account
-      WHERE resetToken=$1
+      WHERE reset_token=$1
       AND email=$2
-      AND reset_token_expiry IS NOT NULL;
+      AND reset_token_expiry > NOW();
       `,
       [resetToken, email]
     );
@@ -185,8 +185,8 @@ const invalidiateResetToken = async (resetToken) => {
     const {rows: [account]} = await pool.query(
       `
       UPDATE account
-      SET resetToken=NULL, reset_token_expiry=NULL
-      WHERE resetToken=$1
+      SET reset_token=NULL, reset_token_expiry=NULL
+      WHERE reset_token=$1
       RETURNING *;
       `,
       [resetToken]
