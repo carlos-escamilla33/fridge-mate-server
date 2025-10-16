@@ -141,17 +141,17 @@ const updateAccountToken = async (account_id, resetToken, resetTokenExpiry) => {
   }
 }
 
-const updateAccountPassword = async (account_id, newPassword) => {
+const updateAccountPassword = async (email, newPassword) => {
   try {
     const updatedHashedPassword = await hashPasswordHelper(newPassword);
     const {rows: [account]} = await pool.query(
       `
         UPDATE account
         SET password=$1
-        WHERE account_id=$2
+        WHERE email=$2
         RETURNING *;
       `,
-      [updatedHashedPassword, account_id]
+      [updatedHashedPassword, email]
     );
 
     delete account.password;

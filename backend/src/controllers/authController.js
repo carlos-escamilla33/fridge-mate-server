@@ -86,10 +86,20 @@ const forgotPassword = async (req, res, next) => {
     }
 }
 
+const resetPassword = async (req, res, next) => {
+    const {email, newPassword} = req.body;
+    try {
+        
+    } catch(err) {
+        next(err);
+    }
+}
+
 module.exports = {
     register,
     login,
     forgotPassword,
+    resetPassword,
 }
 
 /*
