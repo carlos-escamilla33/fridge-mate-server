@@ -1,11 +1,11 @@
 const { access } = require("fs");
+const jwt = require("jsonwebtoken");
+const {JWT_SECRET, REFRESH_TOKEN_SECRET} = process.env;
 const { promisify } = require('util'); 
 const verifyAsync = promisify(jwt.verify);
 const {createAccount, findAccountByEmail, authenticateLogins, updateAccountToken, updateAccountPassword, findAccountByEmailAndValidToken, invalidiateResetToken} = require("../database/models/accountModel");
 const {sendResetEmail} = require("../utils/sendResetEmail");
 const crypto = require('crypto');
-const jwt = require("jsonwebtoken");
-const {JWT_SECRET, REFRESH_TOKEN_SECRET} = process.env;
 
 const register = async (req, res, next) => {
     const {account_name, first_name, last_name, email, password} = req.body;
