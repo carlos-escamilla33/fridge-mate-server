@@ -12,7 +12,7 @@ authRouter.use((req, res, next) => {
 authRouter.post("/register", register);
 authRouter.post("/login", login);
 authRouter.post("/forgot-password", forgotPassword);
-authRouter.post("/reset-password", resetPassowrd);
+authRouter.post("/reset-password", resetPassword);
 
 module.exports = {
     authRouter

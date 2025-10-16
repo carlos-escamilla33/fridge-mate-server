@@ -1,4 +1,4 @@
-const {createAccount, findAccountByEmail, authenticateLogins, updateAccountToken} = require("../database/models/accountModel");
+const {createAccount, findAccountByEmail, authenticateLogins, updateAccountToken, updateAccountPassword, findAccountByEmailAndValidToken} = require("../database/models/accountModel");
 const {sendResetEmail} = require("../utils/sendResetEmail");
 const crypto = require('crypto');
 
@@ -87,9 +87,24 @@ const forgotPassword = async (req, res, next) => {
 }
 
 const resetPassword = async (req, res, next) => {
-    const {email, newPassword} = req.body;
+    const {email, newPassword, resetToken} = req.body;
     try {
+        // look for the account by reset token
+        const account = await findAccountByEmailAndValidToken(email, resetToken);
+
+        if (!account) {
+            throw new Error({
+                message: "Invalid or expired reset link"
+            });
+        }
+
+        await updateAccountPassword(email, newPassword);
         
+        //  invalidate reset token here
+
+        res.send({
+            message: "Password reset successfully!",
+        });
     } catch(err) {
         next(err);
     }
