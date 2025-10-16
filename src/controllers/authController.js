@@ -157,7 +157,7 @@ const changePassword = async (req, res, next) => {
         const account = await findAccountByEmail(email);
 
         if (!account) {
-            res.sendStatus(403);
+            return res.sendStatus(403);
         }
 
         const isValid = await bcrypt.compare(currentPassword, account.password);
