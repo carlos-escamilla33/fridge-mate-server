@@ -67,16 +67,17 @@ const findProfilesByAccountId = async (account_id) => {
     }
 }
 
-const updateProfile = async ({profile_id, first_name, last_name}) => {
+const updateProfile = async (profile_id, account_id, first_name, last_name) => {
     try {
         const {rows: [profile]} = await pool.query(
             `
             UPDATE profile
             SET first_name=$1, last_name=$2
             WHERE profile_id=$3
+            AND account_id=$4
             RETURNING *;
             `,
-            [first_name, last_name, profile_id]
+            [first_name, last_name, profile_id, account_id]
         );
 
         return profile;

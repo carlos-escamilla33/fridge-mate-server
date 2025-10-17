@@ -38,7 +38,19 @@ const getSingleProfile = async (req, res, next) => {
     }
 }
 
+const updateProfileName = async (req, res, next) => {
+    const {firstName, lastName} = req.body;
+    const {id} = req.user;
+    try {
+        const profile = await findProfileByName(id, firstName, lastName);
+    } catch (err) {
+        
+    }
+}
+
+
 module.exports = {
     getAllAccountProfiles,
     getSingleProfile,
+    updateProfileName
 }
