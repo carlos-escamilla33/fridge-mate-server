@@ -76,21 +76,21 @@ const findAccountByEmail = async (email) => {
   }
 }
 
-const findAccountByCode = async (code) => {
-  try {
-    const {rows: [account]} = await pool.query(
-      `
-        SELECT * FROM account
-        WHERE account_code=$1;
-      `,
-      [code]
-    );
+// const findAccountByCode = async (code) => {
+//   try {
+//     const {rows: [account]} = await pool.query(
+//       `
+//         SELECT * FROM account
+//         WHERE account_code=$1;
+//       `,
+//       [code]
+//     );
 
-    return account;
-  } catch (err) {
-    throw err;
-  }
-};
+//     return account;
+//   } catch (err) {
+//     throw err;
+//   }
+// };
 
 const findAccountByEmailAndValidToken = async (email, resetToken) => {
   try {
@@ -121,7 +121,7 @@ const getAllAccounts = async () => {
   }
 };
 
-const updateAccountDetails = async ({ account_id, account_name, email}) => {
+const updateAccountDetails = async (account_id, account_name, email) => {
   try {
     const {rows: [account]} = await pool.query(
       `
@@ -132,6 +132,10 @@ const updateAccountDetails = async ({ account_id, account_name, email}) => {
       `,
       [account_name, email, account_id]
     );
+
+    delete account.password;
+    delete account.reset_token
+    delete account.reset_token_expiry
 
     return account;
   } catch (err) {
@@ -246,7 +250,7 @@ module.exports = {
   getAllAccounts,
   updateAccountDetails,
   updateAccountPassword,
-  findAccountByCode,
+  // findAccountByCode,
   findAccountById,
   findAccountByEmail,
   findAccountByEmailAndValidToken,

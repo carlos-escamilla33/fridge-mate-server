@@ -1,5 +1,7 @@
 const {createProfile, findProfileByName, findProfilesByAccountId} = require("../database/models/profileModel");
-const {findAccountById} = require("../database/models/accountModel");
+const {findAccountById, findAccountByEmail, updateAccountDetails} = require("../database/models/accountModel");
+const {JWT_SECRET, REFRESH_TOKEN_SECRET} = process.env;
+const jwt = require("jsonwebtoken");
 
 const registerProfile = async (req, res, next) => {
     const {id} = req.user;
@@ -55,8 +57,57 @@ const getAllAccountProfileInfo = async (req, res, next) => {
     }
 }
 
+const updateAccountInfo = async (req, res, next) => {
+    const {id} = req.user;
+    const {accountName, newEmail} = req.body;
+    try {
+        const _account = await findAccountById(id);
+
+        if (!_account) {
+            return res.sendStatus(400);
+        }
+
+        const acc = await findAccountByEmail(newEmail);
+
+        if (acc && acc.account_id !== id) {
+            return res.status(400).json({message: "Email already in use"});
+        }
+
+        if (!accountName) {
+            accountName = _account.account_name;
+        }
+        if (!newEmail) {
+            newEmail = _account.email;
+        }
+
+        const account = await updateAccountDetails(id, accountName, newEmail);
+
+        const accessToken = jwt.sign(
+            { id: account.account_id, email: newEmail },
+            JWT_SECRET,
+            { expiresIn: '15m' }
+        );
+        
+        const refreshToken = jwt.sign(
+            { id: account.account_id, email: newEmail },
+            REFRESH_TOKEN_SECRET,
+            { expiresIn: '30d' }
+        );
+
+        return res.send({
+            message: "Updated account details successfully!",
+            account,
+            accessToken,
+            refreshToken
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
 
 module.exports = {
     registerProfile,
-    getAllAccountProfileInfo
+    getAllAccountProfileInfo,
+    updateAccountInfo,
 }
