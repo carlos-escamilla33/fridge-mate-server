@@ -28,7 +28,7 @@ const register = async (req, res, next) => {
             });
         }
 
-        const account = await createAccount(account_name, first_name, last_name, email, password);
+        const {account, profile} = await createAccount(account_name, first_name, last_name, email, password);
         const accessToken = jwt.sign(
             {id: account.account_id, email: account.email},
             JWT_SECRET,
@@ -44,6 +44,7 @@ const register = async (req, res, next) => {
         res.send({
             message: "You Successfully Registered!",
             account,
+            profile,
             accessToken,
             refreshToken,
         });
@@ -55,13 +56,12 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
     const {email, password} = req.body;
     try {
-        // all the work is done by the model function
         const account = await authenticateLogins(email, password);
 
         const accessToken = jwt.sign(
             {id: account.account_id, email: account.email},
             JWT_SECRET,
-            {expiresIn: "15m"} // CHANGE THIS LATER, THIS IS JUST FOR TESTING
+            {expiresIn: "15m"}
         );
 
         const refreshToken = jwt.sign(
