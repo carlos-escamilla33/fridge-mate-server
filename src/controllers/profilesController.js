@@ -1,4 +1,4 @@
-const {findProfilesByAccountId, findProfileById} = require("../database/models/profileModel");
+const {findProfilesByAccountId, findProfileById, updateProfile} = require("../database/models/profileModel");
 
 
 const getAllAccountProfiles = async (req, res, next) => {
@@ -39,10 +39,20 @@ const getSingleProfile = async (req, res, next) => {
 }
 
 const updateProfileName = async (req, res, next) => {
+    const profileId = req.params.id;
     const {firstName, lastName} = req.body;
-    const {id} = req.user;
+    const accountId = req.user.id;
     try {
-        const profile = await findProfileByName(id, firstName, lastName);
+        const profile = await updateProfile(profileId, accountId, firstName, lastName);
+
+        if (!profile) {
+            return res.status(404).json({message: "Profile not found"});
+        }
+
+        return res.send({
+            message: "Updated profile successfully",
+            profile
+        });
     } catch (err) {
         
     }
@@ -52,5 +62,5 @@ const updateProfileName = async (req, res, next) => {
 module.exports = {
     getAllAccountProfiles,
     getSingleProfile,
-    updateProfileName
+    updateProfileName,
 }

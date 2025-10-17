@@ -61,7 +61,7 @@ const login = async (req, res, next) => {
         const accessToken = jwt.sign(
             {id: account.account_id, email: account.email},
             JWT_SECRET,
-            {expiresIn: "15m"}
+            {expiresIn: "30d"} // CHANGE THIS BACK TO 15MIN, JUST FOR TESTING
         );
 
         const refreshToken = jwt.sign(
