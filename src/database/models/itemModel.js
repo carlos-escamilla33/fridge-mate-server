@@ -90,7 +90,8 @@ const findExpiredItems = async (account_id) => {
             `
             SELECT * FROM item
             WHERE account_id=$1
-            AND expiration_date < CURRENT_DATE;
+            AND expiration_date < CURRENT_DATE
+            ORDER BY expiration_date DESC;
             `,
             [account_id]
         )

@@ -1,4 +1,4 @@
-const {findItemsByAccountId, createItem, findItemById, updateItem, deleteItem, findSoonExpiringItems} = require("../database/models/itemModel");
+const {findItemsByAccountId, createItem, findItemById, updateItem, deleteItem, findSoonExpiringItems, findExpiredItems} = require("../database/models/itemModel");
 const Joi = require("joi");
 const itemSchema = Joi.object({
         profileId: Joi.number().integer().positive().required(),
@@ -110,12 +110,26 @@ const deleteSingleItem = async (req, res, next) => {
     }
 }
 
-const getExpiringItems = async (req, res, next) => {
+const getSoonExpiringItems = async (req, res, next) => {
     try {
         const daysOut = req.params.days;
         const accountId = req.user.id;
 
         const items = await findSoonExpiringItems(accountId, daysOut);
+
+        return res.send({
+            items
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
+const getExpiredItems = async (req, res, next) => {
+    try {
+        const accountId = req.user.id;
+
+        const items = await findExpiredItems(accountId);
 
         return res.send({
             items
@@ -131,5 +145,6 @@ module.exports = {
     getSingleItem,
     updateSingleItem,
     deleteSingleItem,
-    getExpiringItems,
+    getSoonExpiringItems,
+    getExpiredItems,
 }
