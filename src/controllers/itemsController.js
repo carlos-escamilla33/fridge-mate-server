@@ -18,7 +18,7 @@ const createSingleItem = async (req, res, next) => {
     try {
         const itemSchema = Joi.object({
         profileId: Joi.number().integer().positive().required(),
-        recipeId: Joi.number().integer().optional(),
+        recipeId: Joi.number().integer().allow(null).optional(),
         foodName: Joi.string().min(2).max(100).required(),
         expirationDate: Joi.date().required(),
         ripenessLevel: Joi.string().min(3).max(30).required()
@@ -32,6 +32,10 @@ const createSingleItem = async (req, res, next) => {
 
         const {profileId, recipeId, foodName, expirationDate, ripenessLevel} = value;
         const item = await createItem(accountId, profileId, recipeId, foodName, expirationDate, ripenessLevel);
+
+        if (!item) {
+            return res.status(500).json({message: "Error creating item"});
+        }
 
         return res.send({
             message: "item created successfully!",
