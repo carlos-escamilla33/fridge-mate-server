@@ -13,6 +13,17 @@ const getAllAccountItems = async (req, res, next) => {
     }
 }
 
+const createSingleItem = async (req, res, next) => {
+    const {profileId, recipeId, foodName, expirationDate, ripenessLevel} = req.body;
+    const accountId = req.user.id;
+    try {
+        const item = await createItem(accountId, profileId, recipeId, foodName, expirationDate, ripenessLevel);
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
     getAllAccountItems,
+    createSingleItem,
 }

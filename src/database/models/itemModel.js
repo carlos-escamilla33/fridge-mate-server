@@ -1,6 +1,6 @@
 const {pool} = require("../config/database");
 
-const createItem = async ({account_id, profile_id, recipe_id, food_name, expiration_date, ripeness_level}) => {
+const createItem = async (account_id, profile_id, recipe_id, food_name, expiration_date, ripeness_level) => {
     try {
         const {rows: [item]} = await pool.query(
             `
