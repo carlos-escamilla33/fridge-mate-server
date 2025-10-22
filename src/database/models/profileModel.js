@@ -86,16 +86,17 @@ const updateProfile = async (profile_id, account_id, first_name, last_name) => {
     }
 }
 
-const toggleProfileNotifications = async ({profile_id, isNotificationsEnabled}) => {
+const toggleProfileNotifications = async (account_id, profile_id, isNotificationsEnabled) => {
     try {
         const {rows: [profile]} = await pool.query(
             `
             UPDATE profile
             SET notifications_enabled=$1
-            WHERE profile_id=$2
+            WHERE account_id=$2
+            AND profile_id=$3
             RETURNING *;
             `,
-            [isNotificationsEnabled, profile_id]
+            [isNotificationsEnabled, account_id, profile_id]
         );
 
         return profile;
@@ -104,15 +105,16 @@ const toggleProfileNotifications = async ({profile_id, isNotificationsEnabled}) 
     }
 }
 
-const deleteProfile = async (profile_id) => {
+const deleteProfile = async (account_id, profile_id) => {
     try {
         const {rows: [profile]} = await pool.query(
             `
             DELETE FROM profile
-            WHERE profile_id=$1
+            WHERE account_id=$1
+            AND profile_id=$2
             RETURNING *;
             `,
-            [profile_id]
+            [account_id, profile_id]
         )
 
         return profile;
