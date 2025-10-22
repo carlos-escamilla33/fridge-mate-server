@@ -63,13 +63,15 @@ const deleteSingleProfile = async (req, res, next) => {
     try {
         const profile = await deleteProfile(profileId);
 
+        console.log(profile);
+
         if (!profile) {
             return res.status(404).json({message: "Profile not found"});
         }
 
         return res.send({
-            message: `${profile.first_name}'s Profile deleted successfully!`
-        })
+            message: "Profile deleted successfully!"
+        });
     } catch (err) {
         next(err);
     }

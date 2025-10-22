@@ -112,7 +112,7 @@ const deleteProfile = async (profile_id) => {
             WHERE profile_id=$1
             RETURNING *;
             `,
-            profile_id
+            [profile_id]
         )
 
         return profile;
