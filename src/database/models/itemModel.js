@@ -101,16 +101,18 @@ const findExpiredItems = async (account_id) => {
     }
 }
 
-const updateItem = async ({item_id, food_name, expiration_date}) => {
+const updateItem = async (account_id, profile_id, item_id, food_name, expiration_date, ripeness_level) => {
     try {
         const {rows:[item]} = await pool.query(
             `
             UPDATE item
-            SET food_name=$1, expiration_date=$2, updated_at= NOW()
-            WHERE item_id=$3
+            SET food_name=$1, expiration_date=$2, ripeness_level=$3, updated_at= NOW()
+            WHERE account_id=$4
+            AND item_id=$5
+            AND profile_id=$6
             RETURNING *;
             `,
-            [food_name, expiration_date, item_id]
+            [food_name, expiration_date, ripeness_level, account_id, item_id, profile_id]
         );
 
         return item;
