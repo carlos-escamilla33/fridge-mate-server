@@ -139,14 +139,16 @@ const updateItemRipeness = async ({item_id, ripeness}) => {
     }
 }
 
-const deleteItem = async (id) => {
+const deleteItem = async (account_id, item_id) => {
     try {
         const {rows: [item]} = await pool.query(
             `
             DELETE FROM item
-            WHERE item_id=$1
+            WHERE account_id=$1
+            AND item_id=$2
             RETURNING *;
-            `
+            `,
+            [account_id, item_id]
         );
 
         return item;

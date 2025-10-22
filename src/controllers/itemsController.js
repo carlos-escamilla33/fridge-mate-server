@@ -1,4 +1,4 @@
-const {findItemsByAccountId, createItem, findItemById, updateItem} = require("../database/models/itemModel");
+const {findItemsByAccountId, createItem, findItemById, updateItem, deleteItem} = require("../database/models/itemModel");
 const Joi = require("joi");
 const itemSchema = Joi.object({
         profileId: Joi.number().integer().positive().required(),
@@ -90,9 +90,30 @@ const updateSingleItem = async (req, res, next) => {
     }
 }
 
+const deleteSingleItem = async (req, res, next) => {
+    try {
+        const itemId = req.params.id;
+        const accountId = req.user.id;
+
+        const item = await deleteItem(accountId, itemId);
+
+        if (!item) {
+            res.status(500).json({message: "Error in deleting item"});
+        }
+
+        return res.send({
+            message: "Successfully deleted item!",
+            item
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
     getAllAccountItems,
     createSingleItem,
     getSingleItem,
     updateSingleItem,
+    deleteSingleItem,
 }
