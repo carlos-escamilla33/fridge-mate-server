@@ -7,16 +7,15 @@ const createAccount = async (account_name, first_name, last_name, email, passwor
 
   try {
     await client.query("BEGIN");
-    const accCode = generateCodeHelper(account_name);
     const hashedPassword = await hashPasswordHelper(password);
 
     const {rows: [account]} = await client.query(
       `
-        INSERT INTO account(account_name, account_code, email, password)
-        VALUES($1, $2, $3, $4)
+        INSERT INTO account(account_name, email, password)
+        VALUES($1, $2, $3)
         RETURNING *;
         `,
-      [account_name, accCode, email, hashedPassword]
+      [account_name,  email, hashedPassword]
     );
 
     const {rows: [profile]} = await client.query(
