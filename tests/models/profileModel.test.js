@@ -1,4 +1,4 @@
-const {createProfile, findProfileByName, findProfileById, findProfilesByAccountId, updateProfile} = require("../../src/database/models/profileModel");
+const {createProfile, findProfileByName, findProfileById, findProfilesByAccountId, updateProfile, toggleProfileNotifications} = require("../../src/database/models/profileModel");
 const {pool} = require("../../src/database/config/database");
 const { createAccount } = require("../../src/database/models/accountModel");
 
@@ -53,5 +53,12 @@ describe("Testing Profile Model Functions", () => {
         expect(profile.account_id).toEqual(account.account_id);
         expect(profile.first_name).toMatch(/Wade/);
         expect(profile.last_name).toMatch(/Escamilla/);
+    });
+
+    test("should update profile notification preferences", async () => {
+        const updatedProfile = await toggleProfileNotifications(profile.account_id, profile.profile_id, !(profile.notifications_enabled));
+        expect(updatedProfile).toBeDefined();
+        expect(updatedProfile.notifications_enabled).toBeDefined();
+        expect(updatedProfile.notifications_enabled).not.toEqual(profile.notifications_enabled);
     });
 });
