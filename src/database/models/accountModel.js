@@ -2,7 +2,7 @@ const {pool} = require("../config/database");
 const bcrypt = require("bcrypt");
 const { hashPasswordHelper, generateCodeHelper } = require("./helpers");
 
-const createAccount = async (account_name, first_name, last_name, email, password) => {
+const createAccount = async ({account_name, first_name, last_name, email, password}) => {
   const client = await pool.connect();
 
   try {
