@@ -1,4 +1,6 @@
-const {createAccount, deleteAccount, findAccountById, findAccountByEmail, updateAccountDetails, updateAccountPassword} = require("../../src/database/models/accountModel");
+const {createAccount, deleteAccount, findAccountById,
+   findAccountByEmail, updateAccountDetails, updateAccountPassword} = require("../../src/database/models/accountModel");
+const {findProfilesByAccountId} = require("../../src/database/models/profileModel");
 const {pool} = require("../../src/database/config/database");
 
 describe("Testing Account Model Functions", () => {
@@ -54,10 +56,22 @@ describe("Testing Account Model Functions", () => {
 
   test("should update account password", async () => {
     const newPassword = "LunaChubby";
-    console.log(testAccount);
+
     const updatedAccount = await updateAccountPassword(testAccount.account.email, newPassword);
     expect(updatedAccount).toBeDefined();
   })
 
+  test("should delete whole account", async () => {
+    const deletedAccount = await deleteAccount(testAccount.account.account_id);
+    expect(deletedAccount).toBeDefined();
+  });
+
+  test("should not find profiles from deleted account", async () => {
+    const profiles = await findProfilesByAccountId(testAccount.account.account_id);
+
+    for (let profile in profiles) {
+      expect(profile).toBeUndefined();
+    }
+  });
 
 });
