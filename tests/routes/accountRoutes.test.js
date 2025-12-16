@@ -49,4 +49,16 @@ describe("API Account Routes", () => {
         });
     });
 
+    describe("POST /api/auth/login", () => {
+        test("should send an email to an existing account for password reset", async () => {
+            const res = await request(app)
+                .post("/api/auth/forgot-password")
+                .send({
+                    email: "Rileyrolls@gmail.com"
+                });
+
+            expect(res.status).toBe(200);
+            expect(res.body.message).toMatch(/If an account exists with that email, a reset link has been sent./);
+        });
+    })
 });
