@@ -1,4 +1,4 @@
-const {createProfile} = require("../../src/database/models/profileModel");
+const {createProfile, findProfileByName} = require("../../src/database/models/profileModel");
 const {pool} = require("../../src/database/config/database");
 const { createAccount } = require("../../src/database/models/accountModel");
 
@@ -23,5 +23,12 @@ describe("Testing Profile Model Functions", () => {
         expect(profile).toBeDefined();
         expect(profile.first_name).toMatch(/Eris/);
         expect(profile.last_name).toMatch(/Carvalho/);
-    })
+    });
+
+    test("should find profile by first and last name", async () => {
+        const foundProfile = await findProfileByName(profile.account_id, profile.first_name, profile.last_name);
+        expect(foundProfile).toBeDefined();
+        expect(foundProfile.first_name).toMatch(profile.first_name);
+        expect(foundProfile.last_name).toMatch(profile.last_name);
+    });
 });
