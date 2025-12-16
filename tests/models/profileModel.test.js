@@ -1,4 +1,4 @@
-const {createProfile, findProfileByName} = require("../../src/database/models/profileModel");
+const {createProfile, findProfileByName, findProfileById, findProfilesByAccountId} = require("../../src/database/models/profileModel");
 const {pool} = require("../../src/database/config/database");
 const { createAccount } = require("../../src/database/models/accountModel");
 
@@ -26,9 +26,24 @@ describe("Testing Profile Model Functions", () => {
     });
 
     test("should find profile by first and last name", async () => {
-        const foundProfile = await findProfileByName(profile.account_id, profile.first_name, profile.last_name);
-        expect(foundProfile).toBeDefined();
-        expect(foundProfile.first_name).toMatch(profile.first_name);
-        expect(foundProfile.last_name).toMatch(profile.last_name);
+        const returnedProfile = await findProfileByName(profile.account_id, profile.first_name, profile.last_name);
+        expect(returnedProfile).toBeDefined();
+        expect(returnedProfile.first_name).toMatch(profile.first_name);
+        expect(returnedProfile.last_name).toMatch(profile.last_name);
     });
+
+    test("should find profile by profile id", async () => {
+        const returnedProfile = await findProfileById(profile.profile_id);
+        expect(returnedProfile).toBeDefined();
+    });
+
+    test("should find profiles by account id", async () => {
+        const returnedProfiles = await findProfilesByAccountId(account.account_id);
+        expect(returnedProfiles).toBeDefined();
+        
+        for (let i = 0; i < returnedProfiles.length; i++) {
+            expect(returnedProfiles[i]).toBeDefined();
+            expect(returnedProfiles[i].account_id).toEqual(account.account_id);
+        }
+    })
 });
