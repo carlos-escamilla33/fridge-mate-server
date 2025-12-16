@@ -66,7 +66,7 @@ const login = async (req, res, next) => {
             {expiresIn: "30d"}
         );
 
-        res.send({
+        res.status(200).json({
             message: "You Successfully Logged In!",
             account,
             accessToken,
