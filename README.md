@@ -174,39 +174,44 @@ Authorization: Bearer <your_access_token>
 
 ## 📦 Project Structure
 
+
 ```
 fridge-mate-api/
 ├── src/
-│   ├── api/
-│   │   └── index.js              # API router configuration
 │   ├── controllers/
-│   │   ├── authController.js     # Authentication logic
-│   │   ├── accountController.js  # Account management
-│   │   ├── profileController.js  # Profile management
-│   │   └── itemsController.js    # Items management
+│   │   ├── accountsController.js   # Account management logic
+│   │   ├── authController.js       # Authentication logic
+│   │   ├── itemsController.js      # Items management logic
+│   │   └── profilesController.js   # Profile management logic
 │   ├── database/
-│   │   ├── db.js                 # Database connection
-│   │   └── models/
-│   │       ├── accountModel.js   # Account database operations
-│   │       ├── profileModel.js   # Profile database operations
-│   │       ├── itemsModel.js     # Items database operations
-│   │       └── helpers.js        # Database helper functions
+│   │   ├── config/                 # Database configuration
+│   │   ├── models/                 # Database models
+│   │   └── schema.sql              # Database schema
 │   ├── middleware/
-│   │   └── authToken.js          # JWT authentication middleware
+│   │   └── authToken.js            # JWT authentication middleware
 │   ├── routes/
-│   │   ├── authRoutes.js         # Authentication routes
-│   │   ├── accountRoutes.js      # Account routes
-│   │   ├── profileRouter.js      # Profile routes
-│   │   └── itemsRouter.js        # Items routes
-│   └── utils/
-│       └── sendResetEmail.js     # Email utility
+│   │   ├── accountRoutes.js        # Account routes
+│   │   ├── authRoutes.js           # Authentication routes
+│   │   ├── itemsRouter.js          # Items routes
+│   │   └── profileRouter.js        # Profile routes
+│   ├── utils/
+│   │   └── sendResetEmail.js       # Email utility functions
+│   └── api.js                      # API router configuration
 ├── tests/
-│   ├── models/                   # Model unit tests
-│   └── routes/                   # Route integration tests
-├── app.js                        # Express app configuration
-├── server.js                     # Server entry point
-├── package.json
-└── .env                          # Environment variables (not in repo)
+│   ├── models/
+│   │   ├── accountModel.test.js    # Account model tests
+│   │   ├── database.test.js        # Database connection tests
+│   │   └── profileModel.test.js    # Profile model tests
+│   └── routes/
+│       └── authRoutes.test.js      # Authentication route tests
+├── media/                          # Media assets
+├── app.js                          # Express app configuration
+├── server.js                       # Server entry point
+├── package.json                    # Dependencies and scripts
+├── .env                            # Environment variables (not in repo)
+├── .gitignore                      # Git ignore rules
+└── README.md                       # Project documentation
+
 ```
 
 ## 🌐 Deployment
