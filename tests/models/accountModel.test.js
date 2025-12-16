@@ -1,7 +1,7 @@
-const {createAccount, deleteAccount, findAccountById, findAccountByEmail} = require("../../src/database/models/accountModel");
+const {createAccount, deleteAccount, findAccountById, findAccountByEmail, updateAccountDetails, updateAccountPassword} = require("../../src/database/models/accountModel");
 const {pool} = require("../../src/database/config/database");
 
-describe("account model", () => {
+describe("Testing Account Model Functions", () => {
   let testAccount;
   let accountData;
 
@@ -20,21 +20,44 @@ describe("account model", () => {
     pool.end();
   });
 
-  test("Should create an account and check account attributes", async () => {
+  test("should create an account and check account attributes", async () => {
     testAccount = await createAccount(accountData);
     expect(testAccount.account.account_name).toBe("Riley's Fridge");
     expect(testAccount.account.email).toBe("noemail1@gmail.com");
   });
 
-  test("Should find account by id", async () => {
+  test("should create a profile with every new account", async () => {
+    const {profile} = testAccount;
+    expect(profile.first_name).toEqual("Riley");
+  });
+
+  test("should find account by id", async () => {
     account = await findAccountById(testAccount.account.account_id);
     expect(account.account_id).toEqual(testAccount.account.account_id);
   });
 
-  test("Should find account by email", async () => {
+  test("should find account by email", async () => {
     account = await findAccountByEmail(testAccount.account.email);
     expect(account.email).toBe("noemail1@gmail.com");
   });
+
+  test("should update account name and email", async () => {
+    const updatedAccountName = "Luna's fridge";
+    const updatedEmail = "luna1@gmail.com";
+    const accountId = testAccount.account.account_id;
+    
+    const updatedAccount = await updateAccountDetails(accountId, updatedAccountName, updatedEmail);
+    testAccount.account = updatedAccount;
+    expect(updatedAccount.account_name).toBe("Luna's fridge");
+    expect(updatedAccount.email).toBe("luna1@gmail.com");
+  });
+
+  test("should update account password", async () => {
+    const newPassword = "LunaChubby";
+    console.log(testAccount);
+    const updatedAccount = await updateAccountPassword(testAccount.account.email, newPassword);
+    expect(updatedAccount).toBeDefined();
+  })
 
 
 });
