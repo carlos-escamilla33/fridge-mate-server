@@ -1,4 +1,4 @@
-const {createAccount, deleteAccount, findAccountById} = require("../../src/database/models/accountModel");
+const {createAccount, deleteAccount, findAccountById, findAccountByEmail} = require("../../src/database/models/accountModel");
 const {pool} = require("../../src/database/config/database");
 
 describe("account model", () => {
@@ -30,4 +30,11 @@ describe("account model", () => {
     account = await findAccountById(testAccount.account.account_id);
     expect(account.account_id).toEqual(testAccount.account.account_id);
   });
+
+  test("Should find account by email", async () => {
+    account = await findAccountByEmail(testAccount.account.email);
+    expect(account.email).toBe("noemail1@gmail.com");
+  });
+
+
 });

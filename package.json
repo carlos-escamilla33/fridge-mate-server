@@ -2,7 +2,7 @@
   "scripts": {
     "start": "node ./server.js",
     "dev": "node --watch ./server.js",
-    "test:models": "jest ./tests/models/*.test.js"
+    "test:account_models": "jest ./tests/models/accountModel.test.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
