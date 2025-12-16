@@ -11,7 +11,7 @@ app.use(morgan("dev"));
 app.use(express.urlencoded({extended:true}));
 app.use(cors());
 
-app.use("/api", apiRouter)
+app.use("/api", apiRouter);
 
 app.use((err, req, res, next) => {
   console.error('Error:', err);
