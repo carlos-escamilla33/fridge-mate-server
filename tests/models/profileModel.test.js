@@ -1,4 +1,4 @@
-const {createProfile, findProfileByName, findProfileById, findProfilesByAccountId} = require("../../src/database/models/profileModel");
+const {createProfile, findProfileByName, findProfileById, findProfilesByAccountId, updateProfile} = require("../../src/database/models/profileModel");
 const {pool} = require("../../src/database/config/database");
 const { createAccount } = require("../../src/database/models/accountModel");
 
@@ -40,10 +40,18 @@ describe("Testing Profile Model Functions", () => {
     test("should find profiles by account id", async () => {
         const returnedProfiles = await findProfilesByAccountId(account.account_id);
         expect(returnedProfiles).toBeDefined();
-        
+
         for (let i = 0; i < returnedProfiles.length; i++) {
             expect(returnedProfiles[i]).toBeDefined();
             expect(returnedProfiles[i].account_id).toEqual(account.account_id);
         }
-    })
+    });
+
+    test("should update profile information(first_name, last_name)", async () => {
+        profile = await updateProfile(profile.profile_id, profile.account_id, "Wade", "Escamilla");
+        expect(profile).toBeDefined();
+        expect(profile.account_id).toEqual(account.account_id);
+        expect(profile.first_name).toMatch(/Wade/);
+        expect(profile.last_name).toMatch(/Escamilla/);
+    });
 });
