@@ -16,7 +16,7 @@ const register = async (req, res, next) => {
         if (_account) {
             const error = new Error("User already exists");
             error.statusCode = 400;
-            throw err;
+            throw error;
         }
         if (password.length < 8) {
             const error = new Error("Password length must be at least 8 characters long");
