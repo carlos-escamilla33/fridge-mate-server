@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const sgMail = require('@sendgrid/mail');
 require("dotenv").config();
 const EMAIL = process.env.EMAIL;
 const PASS = process.env.EMAIL_PASSWORD;
@@ -33,7 +34,7 @@ const USER = process.env.EMAIL_USER;
 const sendResetEmail = async (EMAIL, resetToken) => {
   try {
     if (process.env.NODE_ENV === "production") {
-      SVGFEColorMatrixElement.setApiKey(process.env.SENDGRID_API_KEY);
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
       const resetLink = `https://your-frontend-url.com/reset-password?token=${resetToken}`;
 
