@@ -31,7 +31,7 @@ const USER = process.env.EMAIL_USER;
 //   }
 // };
 
-const sendResetEmail = async (EMAIL, resetToken) => {
+const sendResetEmail = async (email, resetToken) => {
   try {
     if (process.env.NODE_ENV === "production") {
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
